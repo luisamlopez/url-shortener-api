@@ -26,15 +26,17 @@ app.post('/', async (req, res) => {
             return res.status(400).json({ error: 'URL is required' });
         }
 
+        const urlencoded = new URLSearchParams();
+        urlencoded.append("url", values.link);
+
         // Forward the request to the external API
         const cleanUriResponse = await fetch('https://cleanuri.com/api/v1/shorten', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Access-Control-Allow-Origin': '*',
-
             },
-            body: new URLSearchParams({ url }),
+            body: urlencoded,
         });
 
         // Check if the response from the external API is successful
