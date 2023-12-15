@@ -7,7 +7,15 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: process.env.FRONTEND_ORIGIN,
+    origin: (origin, callback) => {
+        // Check if the origin is allowed (or allow all origins with "*")
+        const allowedOrigins = [process.env.FRONTEND_ORIGIN, '*'];
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
