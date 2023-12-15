@@ -7,7 +7,7 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.FRONTEND_ORIGIN || 'http://localhost:3000/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
