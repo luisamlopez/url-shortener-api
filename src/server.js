@@ -1,12 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
+require('dotenv').config();
 
 const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: 'https://luisamlopez-url-shortener.onrender.com/', // Replace with your frontend domain
+    origin: process.env.FRONTEND_ORIGIN || 'https://luisamlopez-url-shortener.onrender.com/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
