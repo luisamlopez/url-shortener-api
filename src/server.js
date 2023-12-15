@@ -48,7 +48,7 @@ app.post('/', async (req, res) => {
         const result = await cleanUriResponse.json();
         console.log('Result:', result);
         // Return the shortened link in the response
-        res.status(200).json({ result_url: result.result_url });
+        res.status(200).json({ result_url: result.result_url, message: 'Link shortened successfully' });
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
