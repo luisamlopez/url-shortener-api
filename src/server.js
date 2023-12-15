@@ -7,7 +7,7 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: process.env.FRONTEND_ORIGIN || 'https://luisamlopez-url-shortener.onrender.com/',
+    origin: process.env.FRONTEND_ORIGIN && 'http://localhost:3000/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
@@ -42,7 +42,7 @@ app.post('/api/v1/shorten', async (req, res) => {
 
         // Parse the response from the external API
         const result = await cleanUriResponse.json();
-
+        console.log('Result:', result);
         // Return the shortened link in the response
         res.status(200).json({ result_url: result.result_url });
     } catch (error) {
