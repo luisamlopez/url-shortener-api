@@ -28,8 +28,6 @@ app.post('/', async (req, res) => {
 
         const urlencoded = new URLSearchParams();
         urlencoded.append("url", values.link);
-        res.json(urlencoded)
-
         // Forward the request to the external API
         const cleanUriResponse = await fetch('https://cleanuri.com/api/v1/shorten', {
             method: 'POST',
