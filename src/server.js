@@ -1,13 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
-require('dotenv').config();
+import dotenv from 'dotenv';
 
 const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: process.env.FRONTEND_ORIGIN && 'http://localhost:3000/',
+    origin: 'http://localhost:3000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
