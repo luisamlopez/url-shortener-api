@@ -8,7 +8,7 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: process.env.FRONTEND_ORIGIN || 'https://luisamlopez-url-shortener.onrender.com',
+    origin: process.env.FRONTEND_ORIGIN || '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
