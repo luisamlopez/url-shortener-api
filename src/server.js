@@ -16,7 +16,7 @@ app.use(cors({
 app.use(express.json());
 
 // Define the route for handling POST requests to /api/v1/shorten
-app.post('/api/v1/shorten', async (req, res) => {
+app.post('/', async (req, res) => {
     try {
         const { url } = req.body;
 
