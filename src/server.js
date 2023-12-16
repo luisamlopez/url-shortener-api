@@ -8,8 +8,8 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: 'http://localhost:3000',
+    methods: 'POST',
     credentials: true,
 }));
 
@@ -21,34 +21,29 @@ app.post('/', async (req, res) => {
     try {
         const { url } = req.body;
 
-        // Validate if the 'url' field is present in the request body
-        if (!url) {
-            return res.status(400).json({ error: 'URL is required' });
-        }
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-        const urlencoded = new URLSearchParams();
-        urlencoded.append("url", values.link);
-        // Forward the request to the external API
-        const cleanUriResponse = await fetch('https://cleanuri.com/api/v1/shorten', {
+        var urlencoded = new URLSearchParams();
+        urlencoded.append("url", url);
+
+        var requestOptions = {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Access-Control-Allow-Origin': '*',
-            },
+            headers: myHeaders,
             body: urlencoded,
-        });
+            redirect: 'follow'
+        };
 
-        // Check if the response from the external API is successful
-        if (!cleanUriResponse.ok) {
-            const errorResponse = await cleanUriResponse.json();
-            return res.status(cleanUriResponse.status).json(errorResponse);
-        }
+        fetch("https://localhost:3001/", requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                console.log(result);
+                res.status(200).json({ result_url: result.result_url, message: 'Link shortened successfully' });
 
-        // Parse the response from the external API
-        const result = await cleanUriResponse.json();
-        console.log('Result:', result);
-        // Return the shortened link in the response
-        res.status(200).json({ result_url: result.result_url, message: 'Link shortened successfully' });
+            })
+            .catch(error => res.status(500).json({ error: error }));
+
+
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
