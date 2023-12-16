@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
@@ -8,7 +8,7 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: '*',
     methods: 'POST',
     credentials: true,
 }));
@@ -19,36 +19,35 @@ app.use(express.json());
 // Define the route for handling POST requests to /api/v1/shorten
 app.post('/', async (req, res) => {
     try {
-        const { url } = req.body;
+        console.log(req.body); // Check what is being received in the request body
 
-        var myHeaders = new Headers();
+        const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-        var urlencoded = new URLSearchParams();
-        urlencoded.append("url", url);
+        const urlencoded = new URLSearchParams();
+        urlencoded.append("url", req.body.url); // Use req.body.url instead of req.body.formData
 
-        var requestOptions = {
+        const requestOptions = {
             method: 'POST',
             headers: myHeaders,
             body: urlencoded,
             redirect: 'follow'
         };
 
-        fetch("https://localhost:3001/", requestOptions)
-            .then(response => response.text())
-            .then(result => {
-                console.log(result);
-                res.status(200).json({ result_url: result.result_url, message: 'Link shortened successfully' });
+        const response = await fetch("https://cleanuri.com/api/v1/shorten", requestOptions);
 
-            })
-            .catch(error => res.status(500).json({ error: error }));
-
-
+        if (response.ok) {
+            const result = await response.json();
+            res.status(200).json({ result_url: result.result_url, message: 'Link shortened successfully' });
+        } else {
+            res.status(response.status).json({ error: 'Failed to shorten the link' });
+        }
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 const PORT = 3001;
 app.listen(PORT, () => {
